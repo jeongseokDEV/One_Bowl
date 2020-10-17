@@ -1,0 +1,83 @@
+.total_wrap { width: 100%; height: 1700px; }
+
+.header_wrap { width: 100%; height: 10%; }
+.content_wrap { width: 100%; height: 80%; }
+
+.header_menu_wrap { width: 10%; height: 100%; float: left; margin-top: 4.5%; margin-left: 1%;}
+.header_menu_wrap img { width: 70%; height: 50%; }
+.header_logo_wrap { width: 10%; height: 100%; float: left; margin-left: 11%; margin-right: 2%; margin-top: 3.5%; }
+.header_logo_wrap img { width: 90%; height: 60%; }
+.header_searchInput_wrap { width: 43%; height: 100%; float: left; margin-right: 4%; margin-top: 3%; }
+.header_searchInput_wrap input { width: 100%; height: 60%; border: solid 2px #FCD951; border-radius: 20px; font-size: 28pt; }
+.header_searchBtn_wrap { width: 9%; height: 100%; float: left; margin-top: 4%; }
+.header_searchBtn_wrap img { width: 88%; height: 53%; }
+.header_review_wrap { width: 9%; height: 100%; float: left; margin-top: 4%; }
+.header_review_wrap img { width: 70%; height: 50%; }
+
+.content_info_wrap { width: 100%; height: 2%; border: 1px solid #FCD951; background-color: #FCD951; margin-bottom: 4%; }
+.content_category_wrap { width: 100%; height: 70%; }
+
+.content_category_total_wrap { width: 48%; height: 28%; float: left; margin-bottom: 3%; }
+.content_category_total_wrap img { width: 55%; height: 100%; }
+.content_category_single_wrap { width: 48%; height: 28%; float: left; margin-bottom: 3%; }
+.content_category_single_wrap img { width: 55%; height: 100%; }
+.content_category_korean_wrap { width: 48%; height: 28%; float: left; margin-bottom: 3%; }
+.content_category_korean_wrap img { width: 55%; height: 100%; }
+.content_category_western_wrap { width: 48%; height: 28%; float: left; margin-bottom: 3%; }
+.content_category_western_wrap img { width: 55%; height: 100%; }
+.content_category_chinese_wrap { width: 48%; height: 28%; float: left; margin-bottom: 3%; }
+.content_category_chinese_wrap img { width: 55%; height: 100%; }
+.content_category_japan_wrap { width: 48%; height: 28%; float: left; margin-bottom: 3%; }
+.content_category_japan_wrap img { width: 55%; height: 100%; }
+.content_category_univ_wrap { width: 48%; height: 28%; float: left; }
+.content_category_univ_wrap img { width: 55%; height: 100%; }
+.content_category_wellbeing_wrap { width: 48%; height: 28%; float: left; }
+.content_category_wellbeing_wrap img { width: 55%; height: 100%; }
+
+/*nav css*/
+.nav_wrap { background-color: white; width: 0%; height:100%; border-right: 0px solid #000000; position:absolute; z-index: 1; }
+
+.nav_header_wrap { width: 100%; height: 10%; background-color: #FCD951; }
+.nav_content_wrap { width: 100%; height: 90%; background-color: #F4E6B8;}
+.nav_tailer_wrap { width: 100%; height: 0%; background-color: #F4E6B8;}
+
+.nav_header_logo_wrap { width: 25%; height: 100%; float: left; }
+.nav_header_logo_wrap img { width: 60%; height: 80%; margin-left: 20%; margin-top: 10%;}
+
+.nav_header_title_wrap { width: 75%; height: 100%; float: left; padding-top : 5%;}
+.nav_header_title_wrap font { color: white; font-size: 55pt; }
+
+.nav_content_myImage_wrap { width: 100%; height: 25%;  background-color: #FCD951; }
+.nav_content_myImage_wrap img { width: 40%; height: 85%; margin-left: 30%; }
+
+.nav_content_myId_wrap { width: 100%; height: 7%;  background-color: #FCD951; margin-bottom: 2%;}
+.nav_content_myId_wrap p { color: white;  font-size: 40pt; margin-left: 37%; }
+
+.nav_content_favorStore_wrap { width: 100%; height: 12%;  border-bottom: solid 2px #FCD951;}
+.nav_content_favorStore_icon_wrap { width: 15%; height:51%; float: left;}
+.nav_content_favorStore_icon_wrap img { width: 80%; height: 100%; margin-left: 23%; margin-top: 30%;}
+.nav_content_favorStore_title_wrap { width: 78%; height: 70%; float: left;  padding-top : 8%;}
+.nav_content_favorStore_title_wrap font {font-size: 35pt; margin-left: 6%;}
+
+.nav_content_calendar_wrap { width: 100%; height: 11%;   border-bottom: solid 2px #FCD951;}
+.nav_content_calendar_icon_wrap { width: 15%; height: 51%; float: left; }
+.nav_content_calendar_icon_wrap img { width: 80%; height: 100%; margin-left: 23%; margin-top: 28%; }
+.nav_content_calendar_title_wrap { width: 78%; height: 70%; float: left; padding-top : 6%; }
+.nav_content_calendar_title_wrap font {font-size: 35pt; margin-left: 6%;}
+
+.nav_content_author_wrap { width: 100%; height: 11%;   border-bottom: solid 2px #FCD951; }
+.nav_content_author_icon_wrap { width: 15%; height: 51%; float :left;}
+.nav_content_author_icon_wrap img {  width: 80%; height: 100%; margin-left: 23%; margin-top: 28%; }
+.nav_content_author_title_wrap { width: 78%; height: 70%; float: left; padding-top : 6%;}
+.nav_content_author_title_wrap font {font-size: 35pt; margin-left: 6%;}
+
+.nav_content_logout_wrap { width: 100%; height: 11%; border-bottom: solid 2px #FCD951; }
+.nav_content_logout_icon_wrap { width: 15%; height: 51%; float: left; }
+.nav_content_logout_icon_wrap img {  width: 80%; height: 100%; margin-left: 30%; margin-top: 28%; }
+.nav_content_logout_title_wrap { width: 78%; height: 70%; float: left; padding-top : 6%; }
+.nav_content_logout_title_wrap font { font-size: 35pt; margin-left: 6%;}
+
+/*tailer css*/
+.tailer_wrap{ width: 100%; height: 13%; border: 1px solid #FCD951; background-color: #FCD951; margin-bottom: 4%;}
+
+.tailer_wrap h5 { color: #555555; }

@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title></title>
+
+  <link rel="stylesheet" href="./css/base.css?ver=2">
+  <link rel="stylesheet" href="./css/calendar.css?ver=2">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <script src="./js/calendar.js?ver=7"></script>
+</head>
+<body>
+  <div class="total_wrap">
+    <div class="header_wrap">
+      <!-- 뒤로가기 -->
+      <div class="header_prevBtn_wrap">
+        <a href="./main.html"><img src="./image/뒤로가기하양.png" alt="뒤로가기" /></a>
+      </div>
+
+      <!-- 학사일정 -->
+      <center>
+      <div class="header_title_wrap">
+        <h2> 원광대 학사일정 캘린더 </h2>
+      </div>
+      </center>
+    </div>
+    <div class="content_wrap">
+      <div class="content_calendar_wrap">
+        <!-- 달력 상단 바 이전 월, 날짜, 다음 월 -->
+        <div class="content_calendar_upperBar_wrap">
+          <div class="content_calendar_upperBar_dateTitle_wrap">
+
+            <div id="year">
+            </div>
+
+            <div id="month">
+            </div>
+          </div>
+        </div>
+
+        <div class="content_calendar_week_wrap">
+          <ul>
+            <center>
+            <li>
+              <h3><font color="#ff2424">SUN</font></h3>
+            </li>
+            <li>
+              <h3>MON</h3>
+            </li>
+            <li>
+              <h3>TUE</h3>
+            </li>
+            <li>
+              <h3>WED</h3>
+            </li>
+            <li>
+              <h3>THU</h3>
+            </li>
+            <li>
+              <h3>FRI</h3>
+            </li>
+            <li>
+              <h3><font color="#3b36cf">SAT</font></h3>
+            </li>
+            </center>
+          </ul>
+        </div>
+        <div id="calendarTab" class="content_calendar_tabular_wrap">
+          <div class="content_calendar_tabular_cell_wrap" id="cell_00">
+          </div>
+          <div class="content_calendar_tabular_cell_wrap" id="cell_01">
+          </div>
+          <div class="content_calendar_tabular_cell_wrap" id="cell_02">
+          </div>
+          <div class="content_calendar_tabular_cell_wrap" id="cell_03">
+          </div>
+          <div class="content_calendar_tabular_cell_wrap" id="cell_04">
+          </div>
+          <div class="content_calendar_tabular_cell_wrap" id="cell_05">
+          </div>
+          <div class="content_calendar_tabular_cell_wrap" id="cell_06">
+          </div>
+
+          <div class="content_calendar_tabular_cell_wrap" id="cell_10">
+          </div>
+          <div class="content_calendar_tabular_cell_wrap" id="cell_11">
+          </div>
+          <div class="content_calendar_tabular_cell_wrap" id="cell_12">
+          </div>
+          <div class="content_calendar_tabular_cell_wrap" id="cell_13">
+          </div>
+          <div class="content_calendar_tabular_cell_wrap" id="cell_14">
+          </div>
+          <div class="content_calendar_tabular_cell_wrap" id="cell_15">
+          </div>
+          <div class="content_calendar_tabular_cell_wrap" id="cell_16">
+          </div>
+
+          <div class="content_calendar_tabular_cell_wrap" id="cell_20">
+          </div>
+          <div class="content_calendar_tabular_cell_wrap" id="cell_21">
+          </div>
+          <div class="content_calendar_tabular_cell_wrap" id="cell_22">
+          </div>
+          <div class="content_calendar_tabular_cell_wrap" id="cell_23">
+          </div>
+          <div class="content_calendar_tabular_cell_wrap" id="cell_24">
+          </div>
+          <div class="content_calendar_tabular_cell_wrap" id="cell_25">
+          </div>
+          <div class="content_calendar_tabular_cell_wrap" id="cell_26">
+          </div>
+
+          <div class="content_calendar_tabular_cell_wrap" id="cell_30">
+          </div>
+          <div class="content_calendar_tabular_cell_wrap" id="cell_31">
+          </div>
+          <div class="content_calendar_tabular_cell_wrap" id="cell_32">
+          </div>
+          <div class="content_calendar_tabular_cell_wrap" id="cell_33">
+          </div>
+          <div class="content_calendar_tabular_cell_wrap" id="cell_34">
+          </div>
+          <div class="content_calendar_tabular_cell_wrap" id="cell_35">
+          </div>
+          <div class="content_calendar_tabular_cell_wrap" id="cell_36">
+          </div>
+
+          <div class="content_calendar_tabular_cell_wrap" id="cell_40">
+          </div>
+          <div class="content_calendar_tabular_cell_wrap" id="cell_41">
+          </div>
+          <div class="content_calendar_tabular_cell_wrap" id="cell_42">
+          </div>
+          <div class="content_calendar_tabular_cell_wrap" id="cell_43">
+          </div>
+          <div class="content_calendar_tabular_cell_wrap" id="cell_44">
+          </div>
+          <div class="content_calendar_tabular_cell_wrap" id="cell_45">
+          </div>
+          <div class="content_calendar_tabular_cell_wrap" id="cell_46">
+          </div>
+
+          <div class="content_calendar_tabular_cell_wrap" id="cell_50">
+          </div>
+          <div class="content_calendar_tabular_cell_wrap" id="cell_51">
+          </div>
+          <div class="content_calendar_tabular_cell_wrap" id="cell_52">
+          </div>
+          <div class="content_calendar_tabular_cell_wrap" id="cell_53">
+          </div>
+          <div class="content_calendar_tabular_cell_wrap" id="cell_54">
+          </div>
+          <div class="content_calendar_tabular_cell_wrap" id="cell_55">
+          </div>
+          <div class="content_calendar_tabular_cell_wrap" id="cell_56">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tailer_wrap">
+    </div>
+  </div>
+</body>
+</html>

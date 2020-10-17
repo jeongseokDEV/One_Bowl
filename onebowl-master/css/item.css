@@ -1,0 +1,108 @@
+.total_wrap { width: 100%; height: 100%; }
+
+.header_wrap { width: 100%; height: 9%; background-color: #FCD951; }
+.content_wrap { width: 100%; height: 91%; }
+.tailer_wrap { width: 100%; height: 0%; }
+
+.header_prevBtn_wrap { width: 15%; height: 100%; float: left; }
+.header_prevBtn_wrap img { width: 50%; height: 45%; margin-top: 25%; }
+.header_storeTitle_wrap { width: 70%; height: 100%; float: left; }
+.header_storeTitle_wrap h1 { color: #ffffff; font-size: 40pt; margin-top: 9%; }
+.header_favorBtn_wrap { width: 15%; height: 100%; float: left; }
+.header_favorBtn_wrap img { width: 50%; height: 50%; margin-top: 20%;}
+
+.content_store_wrap { width: 100%; height: 150%; }
+
+.content_store_sticker_wrap { width: 100%; height: 3%; margin-top: 3%; margin-bottom: 3%; }
+.content_store_sticker_favor_wrap { width: 20%; height: 100%; float: left; background-color: #FCD951; border-radius: 40px; margin-left: 2%; }
+.content_store_sticker_favor_icon_wrap { width: 50%; height: 100%; float: left; }
+.content_store_sticker_favor_icon_wrap img { width: 50%; height: 70%; margin-top: 12%; }
+.content_store_sticker_favor_value_wrap { width: 50%; height: 100%; float: left; }
+.content_store_sticker_favor_value_wrap h2 { color: #ffffff; font-size: 35pt; margin-top: 10%; }
+.content_store_sticker_category_wrap { width: 15%; height: 100%; float: left; background-color: #FCD951; border-radius: 40px; margin-left: 1%; }
+.content_store_sticker_category_wrap h2 { color: #ffffff; margin-top: 9%; font-size: 30pt; }
+.content_store_sticker_wellbeing_wrap { width: 15%; height: 100%; float: left; }
+.content_store_sticker_wellbeing_wrap img { width: 100%; height: 100%; }
+.content_store_sticker_single_wrap { width: 15%; height: 100%; float: left; }
+.content_store_sticker_single_wrap img { width: 100%; height: 100%; }
+
+.content_store_slideImage_wrap { width: 100%; height: 30%; }
+.content_store_slideImage_wrap img { width: 100%; height: 100%; }
+
+.content_store_description_wrap { width: 100%; height: 40%; }
+.content_store_description_text_wrap { width: 100%; height: 100%; }
+
+.content_store_description_text_address_wrap { width: 100%; height: 10%; }
+.content_store_description_text_address_icon_wrap { width: 19%; height: 100%; float: left; border-right: solid 3px #FCD951; padding: 0px; }
+.content_store_description_text_address_icon_wrap p { color: #EDC544; font-size: 30pt; font-weight: bold; }
+.content_store_description_text_address_value_wrap { width: 80%; height: 100%; float: left; }
+
+.content_store_description_text_tel_wrap { width: 100%; height: 10%; }
+.content_store_description_text_tel_icon_wrap { width: 19%; height: 100%; float: left; border-right: solid 3px #FCD951; padding: 0px; }
+.content_store_description_text_tel_icon_wrap p { color: #EDC544; font-size: 30pt; font-weight: bold; }
+.content_store_description_text_tel_value_wrap { width: 80%; height: 100%; float: left; }
+
+.content_store_description_text_opTime_wrap { width: 100%; height: 10%; }
+.content_store_description_text_opTime_icon_wrap { width: 19%; height: 100%; float: left; border-right: solid 3px #FCD951; padding: 0px;}
+.content_store_description_text_opTime_icon_wrap p { color: #EDC544; font-size: 30pt; font-weight: bold; }
+.content_store_description_text_opTime_value_wrap { width: 80%; height: 100%; float: left; }
+
+.content_store_description_text_menu_wrap { width: 100%; height: 40%; }
+.content_store_description_text_menu_icon_wrap { width: 19%; height: 100%; float: left; border-right: solid 3px #FCD951; padding: 0px;}
+.content_store_description_text_menu_icon_wrap p { color: #EDC544; font-size: 30pt; font-weight: bold; }
+.content_store_description_text_menu_value_wrap { width: 80%; height: 100%; float: left; }
+
+.content_store_description_text_isReservation_wrap { width: 100%; height: 10%; }
+.content_store_description_text_isReservation_icon_wrap { width: 19%; height: 100%; float: left; border-right: solid 3px #FCD951; padding: 0px;}
+.content_store_description_text_isReservation_icon_wrap p { color: #EDC544; font-size: 30pt; font-weight: bold; }
+.content_store_description_text_isReservation_value_wrap { width: 80%; height: 100%; float: left; }
+
+.content_store_description_text_isDelivery_wrap { width: 100%; height: 10%; }
+.content_store_description_text_isDelivery_icon_wrap { width: 19%; height: 100%; float: left; border-right: solid 3px #FCD951; padding: 0px;}
+.content_store_description_text_isDelivery_icon_wrap p { color: #EDC544; font-size: 30pt; font-weight: bold; }
+.content_store_description_text_isDelivery_value_wrap { width: 80%; height: 100%; float: left; }
+
+.content_store_description_text_explain_wrap { width: 100%; height: 30%; }
+.content_store_description_text_explain_icon_wrap { width: 19%; height: 80%; float: left; border-right: solid 3px #FCD951; padding: 0px;}
+.content_store_description_text_explain_icon_wrap p { color: #EDC544; font-size: 30pt; font-weight: bold; }
+.content_store_description_text_explain_value_wrap { width: 80%; height: 100%; float: left; }
+
+.content_store_location_wrap { width: 100%; height: 30%; background-color: #aaaaaa; margin-top: 20%; }
+
+.content_review_wrap { width: 100%; height: 50%; margin-top: 40%; }
+.content_review_writeBtn_wrap { width: 100%; height: 25%; background-color: #FCD951; }
+.content_review_writeBtn_wrap h2 { color: #ffffff; font-size: 50pt; padding-top: 6%; }
+
+.content_review_list_wrap { width: 100%; height: 50%;}
+.content_review_list_item_wrap { width: 90%; height: 100%; margin-top: 5%; }
+
+.content_review_list_item_top_wrap { width: 100%; height: 80%; }
+.content_review_list_item_top_image_wrap { width: 40%; height: 100%; float: left; background-color: #eeeeee; border-top: solid 2px #FCD951; border-bottom: solid 2px #FCD951; border-left: solid 2px #FCD951; }
+.content_review_list_item_top_image_wrap img { width: 100%; height: 100%; }
+.content_review_list_item_top_description_wrap { width: 59%; height: 100%; float: left; border: solid 2px #FCD951; border-left: solid 0px #FCD951; border-top-right-radius: 20px; border-bottom-right-radius: 20px; }
+.content_review_list_item_top_description_reviewer_wrap { width: 100%; height: 30%; background-color: #f4e6b8; }
+.content_review_list_item_top_description_reviewer_wrap p { width: 100%; height: 100%; font-weight: bold; }
+
+.content_review_list_item_top_description_text_wrap { width: 100%; height: 90%; }
+.content_review_list_item_top_description_text_wrap p { width: 100%; height: 100%; }
+
+.content_review_list_item_bottom_wrap { width: 100%; height: 20%;  }
+
+
+.content_review_list_item_bottom_sticker_wrap { width: 100%; height: 100%; }
+
+.content_review_list_item_bottom_sticker_starPoint_wrap { width: 35%; height: 100%; float: left; margin-right: 15%; }
+.content_review_list_item_bottom_sticker_starPoint_value_wrap { width: 20%; height: 100%; float: left; }
+.content_review_list_item_bottom_sticker_starPoint_value_wrap img { width: 70%; height: 60%; }
+
+.content_review_list_item_bottom_sticker_favor_wrap { width: 25%; height: 100%; float: left; }
+.content_review_list_item_bottom_sticker_favor_icon_wrap { width: 50%; height: 100%; float: left; }
+.content_review_list_item_bottom_sticker_favor_icon_wrap img { width: 50%; height: 70%; margin-top: 5%; }
+.content_review_list_item_bottom_sticker_favor_value_wrap { width: 50%; height: 100%;float: left; }
+
+.content_review_list_item_bottom_sticker_unFavor_wrap { width: 25%; height: 100%; float: left; }
+.content_review_list_item_bottom_sticker_unFavor_icon_wrap { width: 50%; height: 100%; float: left; }
+.content_review_list_item_bottom_sticker_unFavor_icon_wrap img { width: 50%; height: 70%; margin-top: 10%; }
+.content_review_list_item_bottom_sticker_unFavor_value_wrap { width: 50%; height: 100%; float: left; }
+
+#slide_image { width: 100%; height: 100%; }

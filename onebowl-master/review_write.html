@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+
+    <title></title>
+
+    <link rel="stylesheet" href="./css/base.css?ver=2">
+    <link rel="stylesheet" href="./css/review_write.css?ver=3">
+
+    <style>
+    </style>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+
+    <script>
+    // 리뷰 남기기 클릭 시 발생. 이미지 파일을 서버 디렉토리에 업로드
+    function uploadImageFile() {
+      var formData = new FormData($('#review_form')[0]);
+
+      $.ajax({
+        type: "POST",
+        url:"http://61.245.230.97/SE/Server/review_write_file_upload.php",
+        data: formData,
+        processData: false,
+        contentType: false,
+        crossDomain: true,
+        cache: false,
+
+        beforeSend: function() { },
+        success: function(data) {
+          imageUrl = data;
+          uploadReviewDB(imageUrl);
+        }
+      });
+    }
+
+    // 리뷰 남기기 클릭 시 발생. 리뷰 내용을 DB에 업데이트
+    function uploadReviewDB(imageUrl) {
+      var reviewText = document.getElementById('review_text');
+      var dataString = "imageUrl=" + imageUrl + "&starPoint=" + globalStarPoint + "&reviewText=" + reviewText.value + "&id=" + globalId;
+
+      if(reviewText.value == "") {
+        alert("리뷰 내용을 입력해 주세요");
+        reviewText.focus();
+        return;
+      }
+
+      $.ajax({
+        type: "POST",
+        url:"http://61.245.230.97/SE/Server/review_write_review_upload.php",
+        data: dataString,
+        crossDomain: true,
+        cache: false,
+
+        beforeSend: function() { },
+        success: function(data) {
+          alert("리뷰가 남겨졌어요!!");
+          location.href = "./item.html?id=" + globalId;
+        }
+      });
+    }
+
+    /**이벤트 발생 (크롬,파이어폭스,사파이어 OK!) **/
+    function eventOccur(evEle, evType){
+      if (evEle.fireEvent) {
+        evEle.fireEvent('on' + evType);
+      } else {
+        //MouseEvents가 포인트 그냥 Events는 안됨~ ??
+        var mouseEvent = document.createEvent('MouseEvents');
+        /* API문서 initEvent(type,bubbles,cancelable) */
+        mouseEvent.initEvent(evType, true, false);
+        var transCheck = evEle.dispatchEvent(mouseEvent);
+        if (!transCheck) {
+          //만약 이벤트에 실패했다면
+          console.log("클릭 이벤트 발생 실패!");
+        }
+      }
+    }
+
+    /** 대체버튼 클릭시 강제 이벤트 발생**/
+    function check(){
+      eventOccur(document.getElementById('input_file'),'click');
+      /* alert(orgFile.value); 이벤트 처리가 끝나지 않은 타이밍이라 값 확인 안됨! 시간차 문제 */
+    }
+
+    $(function() {
+      $('#input_file').change(function(e) {
+        $('#pic').attr('src', URL.createObjectURL(e.target.files[0]));
+        $('#pic').css('width', '100%');
+        $('#pic').css('height', '100%');
+        $('#pic').css('margin-top', '0%');
+      });
+    });
+
+    $(document).ready(function () {
+      var tempParam = $(location).attr('search');
+      var id = "";
+      var name = "";
+
+      var decodeParam = decodeURI(tempParam);
+
+      for(var i=11; i<decodeParam.length; i++) {
+        if(decodeParam[i] == '=') {
+
+        } else {
+          name += decodeParam.charAt(i);
+        }
+      }
+
+      for(var i=4; i<6; i++) {
+        if(decodeParam[i] == '&') {
+        } else {
+          id += decodeParam[i];
+        }
+      }
+
+      globalStarPoint = 3;
+      globalId = id;
+      globalName = name;
+
+      setHeaderTitleInnerHTML();
+    });
+
+    function setHeaderTitleInnerHTML() {
+      var headerTitle = document.getElementById('header_title');
+      var innerhtml = "";
+
+      innerhtml += "<h2>" + globalName + "</h2>";
+
+      headerTitle.innerHTML = innerhtml;
+    }
+
+    // 리뷰작성에서 별점을 주고 점수를 재는 함수.
+    function setStarPoint(star) {
+
+      if(star.id == 'star1') {
+        $('#star1').attr('src', './image/full_star.png');
+        $('#star2').attr('src', './image/empty_star.png');
+        $('#star3').attr('src', './image/empty_star.png');
+        $('#star4').attr('src', './image/empty_star.png');
+        $('#star5').attr('src', './image/empty_star.png');
+
+        globalStarPoint = 1;
+      } else if(star.id == 'star2'){
+        $('#star1').attr('src', './image/full_star.png');
+        $('#star2').attr('src', './image/full_star.png');
+        $('#star3').attr('src', './image/empty_star.png');
+        $('#star4').attr('src', './image/empty_star.png');
+        $('#star5').attr('src', './image/empty_star.png');
+
+        globalStarPoint = 2;
+      } else if(star.id == 'star3'){
+        $('#star1').attr('src', './image/full_star.png');
+        $('#star2').attr('src', './image/full_star.png');
+        $('#star3').attr('src', './image/full_star.png');
+        $('#star4').attr('src', './image/empty_star.png');
+        $('#star5').attr('src', './image/empty_star.png');
+
+        globalStarPoint = 3;
+      } else if(star.id == 'star4'){
+        $('#star1').attr('src', './image/full_star.png');
+        $('#star2').attr('src', './image/full_star.png');
+        $('#star3').attr('src', './image/full_star.png');
+        $('#star4').attr('src', './image/full_star.png');
+        $('#star5').attr('src', './image/empty_star.png');
+
+        globalStarPoint = 4;
+      } else if(star.id == 'star5'){
+        $('#star1').attr('src', './image/full_star.png');
+        $('#star2').attr('src', './image/full_star.png');
+        $('#star3').attr('src', './image/full_star.png');
+        $('#star4').attr('src', './image/full_star.png');
+        $('#star5').attr('src', './image/full_star.png');
+
+        globalStarPoint = 5;
+      }
+    }
+    </script>
+  </head>
+  <body>
+    <center>
+    <div class="total_wrap">
+      <div class="header_wrap">
+        <!-- 뒤로가기 -->
+        <div class="header_prevBtn_wrap">
+          <a href="javascript:history.back();"><img src="./image/뒤로가기하양.png" alt="뒤로가기"/></a>
+        </div>
+
+        <!-- 가게명 -->
+        <div id="header_title" class="header_title_wrap">
+        </div>
+      </div>
+
+      <div class="content_wrap">
+        <div class="content_star_wrap">
+
+          <!--별점 이미지-->
+          <div class="content_star_icon_wrap">
+            <img src="./image/별점.png" alt="별점"/></a>
+          </div>
+
+          <!--별점 갯수-->
+          <div class="content_star_value_wrap">
+            <a href="javascript:setStarPoint(star1);">
+              <div class="content_star_value_score_wrap">
+                <img id="star1" src="./image/full_star.png" alt="별"/></a>
+              </div>
+            </a>
+
+            <a href="javascript:setStarPoint(star2);">
+              <div class="content_star_value_score_wrap">
+                <img id="star2" src="./image/full_star.png" alt="별"/></a>
+              </div>
+            </a>
+
+            <a href="javascript:setStarPoint(star3);">
+              <div class="content_star_value_score_wrap">
+                <img id="star3" src="./image/full_star.png" alt="별"/></a>
+              </div>
+            </a>
+
+            <a href="javascript:setStarPoint(star4);">
+              <div class="content_star_value_score_wrap">
+                <img id="star4" src="./image/empty_star.png" alt="별"/></a>
+              </div>
+            </a>
+
+            <a href="javascript:setStarPoint(star5);">
+              <div class="content_star_value_score_wrap">
+                <img id="star5" src="./image/empty_star.png" alt="별"/></a>
+              </div>
+            </a>
+          </div>
+        </div>
+
+        <div class="content_picture_wrap">
+          <form name="review_form" id="review_form">
+            <input type="file" id="input_file" name="input_file" />
+            <img id="pic" src="./image/image_add.png" alt="이미지 올리기" onclick="check()"/>
+          </form>
+        </div>
+
+        <div class="content_write_wrap">
+          <!-- 리뷰 작성하기 -->
+          <div class="content_write_review_wrap">
+            <!-- textarea 로 수정. -->
+            <textarea id="review_text"></textarea>
+          </div>
+
+          <!--리뷰 남기기 버튼-->
+          <a href="javascript:uploadImageFile();">
+            <div class="content_write_review_button_wrap">
+              <center><font>리뷰 남기기</font></center>
+            </div>
+          </a>
+        </div>
+      </div>
+
+      <div class="tailer_wrap">
+      </div>
+    </div>
+  </center>
+  </body>
+</html>

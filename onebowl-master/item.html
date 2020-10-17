@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title></title>
+
+  <link rel="stylesheet" href="./css/base.css?ver=2">
+  <link rel="stylesheet" href="./css/item.css?ver=11">
+
+  <!-- GOOGLE MAPS API -->
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAP0ljtHamSzMFESpTLy-eVxtFD1EurO4s" ></script>
+
+  <!-- JQUERY API -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <script src="./js/touch.js"></script>
+
+  <script>
+  // list.html에서 받아온 파라미터에서 id값만 걸러내는 함수.
+  $(document).ready(function () {
+    //store database 접근할 때 편의를 위한 상수 정의
+    STORE_NAME = 0;
+    STORE_FAVOR = 1;
+    STORE_TEL = 2;
+    STORE_ISWELLBEING = 3;
+    STORE_ISSINGLE = 4;
+    STORE_EXPLAIN = 5;
+    STORE_CATEGORY = 6;
+    STORE_OPTIME = 7;
+    STORE_ISRESERVE = 8;
+    STORE_ISDELIVERY = 9;
+    STORE_ADDRESS = 10;
+    STORE_MENU = 11;
+    STORE_LNG = 12;
+    STORE_LAT = 13;
+    STORE_CODE = 14;
+    STORE_MAIN_IMAGE = 15;
+
+    REVIEW_CODE = 0;
+    REVIEW_TEXT = 1;
+    REVIEW_IMAGE = 2;
+    REVIEW_STARPOINT = 3;
+    REVIEW_FAVOR = 4;
+    REVIEW_UNFAVOR = 5;
+    REVIEW_REVIEWER = 6;
+
+    FAVOR_FLAG = false;
+    FAVOR_REVIEW_FLAG = false;
+
+    globalStoreDatabase = null;
+    globalReviewDatabase = null;
+    globalIdDatabase = null;
+
+    globalNowSlideImage = 1;
+
+    isLogin();
+  });
+
+  // 로그인이 되어있는지 아닌지 판단하는 함수.
+  function isLogin() {
+    var dataString = "";
+
+    $.ajax({
+      type: "POST",
+      url:"http://61.245.230.97/SE/Server/isLogin.php",
+      data: dataString,
+      crossDomain: true,
+      cache: false,
+
+      beforeSend: function() { },
+      success: function(data) {
+        if(data == "false") {
+
+          alert("로그인이 필요한 서비스입니다.");
+          location.href = "./index.html";
+        } else {
+
+          var tempParam = $(location).attr('search');
+          var id = "";
+
+          for(var i=4; i<tempParam.length; i++) {
+            id += tempParam.charAt(i);
+          }
+
+          // 얻어낸 id를 기반으로 DB에서 자료를 얻어낸다.
+          loadStoreDB(id);
+          loadReviewDB(id);
+        }
+      }
+    });
+  }
+
+  // 좋아요 DB연동으로 현재 회원이 이 가게에 좋아요을 눌렀는지 확인하는 함수.
+  function isFavorStore(storeDatabase) {
+    var dataString = "";
+
+    $.ajax({
+      type: "POST",
+      url:"http://61.245.230.97/SE/Server/item_isFavorStore.php",
+      data: dataString,
+      crossDomain: true,
+      cache: false,
+
+      beforeSend: function() { },
+      success: function(data) {
+
+        var idDatabase = dataSlice(data);
+        globalIdDatabase = idDatabase;
+
+        for(var i=0; i < (idDatabase.length-1); i++) {
+          if(storeDatabase[0][STORE_CODE] == idDatabase[i]) {
+            initFavorStore();
+          }
+        }
+      }
+    });
+  }
+
+  // 좋아요 DB 연동 해당 가게와 유저를 기반으로 member_favor 테이블 SELECT 쿼리
+  function okFavorStore() {
+    var dataString = "storeCode=" + globalStoreDatabase[0][STORE_CODE]+ "&storeName=" + globalStoreDatabase[0][STORE_NAME] + "&storeFavor=" + globalStoreDatabase[0][STORE_FAVOR];
+
+    $.ajax({
+      type: "POST",
+      url:"http://61.245.230.97/SE/Server/item_okFavorStore.php",
+      data: dataString,
+      crossDomain: true,
+      cache: false,
+
+      beforeSend: function() { },
+      success: function(data) {
+        var favor_value = Number(globalStoreDatabase[0][STORE_FAVOR]);
+        favor_value += 1;
+        globalStoreDatabase[0][STORE_FAVOR] = favor_value.toString();
+        onStoreStickerInnerHTML(globalStoreDatabase);
+      }
+    });
+  }
+
+  // 좋아요 DB 연동 해당 가게와 유저를 기반으로 member_favor 테이블 DELETE 쿼리
+  function cancelFavorStore() {
+    var dataString = "storeCode=" + globalStoreDatabase[0][STORE_CODE] + "&storeName=" + globalStoreDatabase[0][STORE_NAME] + "&storeFavor=" + globalStoreDatabase[0][STORE_FAVOR];
+
+    $.ajax({
+      type: "POST",
+      url:"http://61.245.230.97/SE/Server/item_cancelFavorStore.php",
+      data: dataString,
+      crossDomain: true,
+      cache: false,
+
+      beforeSend: function() { },
+      success: function(data) {
+        var favor_value = Number(globalStoreDatabase[0][STORE_FAVOR]);
+
+        favor_value -= 1;
+        globalStoreDatabase[0][STORE_FAVOR] = favor_value.toString();
+        onStoreStickerInnerHTML(globalStoreDatabase);
+      }
+    });
+  }
+
+  // 초기에 해당 가게가 좋아요 일 때 처리하는 함수.
+  function initFavorStore() {
+    $('#favor_btn_store').attr('src', './image/좋아요빨강.png');
+    FAVOR_FLAG = true;
+  }
+
+  $(document).ready(function () {
+    $('#favor_btn_store').click(function () {
+      clickStoreFavor();
+    });
+  });
+
+  // 좋아요 버튼을 클릭했을 때 발생하는 함수
+  function clickStoreFavor() {
+    // 좋아요를 이미 누른 상태. 따라서 클릭을 하면 좋아요가 취소된다.
+    if(FAVOR_FLAG == true) {
+
+      cancelFavorStore();
+      $('#favor_btn_store').attr('src', './image/좋아요.png');
+      FAVOR_FLAG = false;
+    } else {
+
+      okFavorStore();
+      $('#favor_btn_store').attr('src', './image/좋아요빨강.png');
+      FAVOR_FLAG = true;
+    }
+  }
+
+  // 문자열을 strIndex를 기반으로 분할하는 함수
+  function stringSplit(strData, strIndex){
+    var stringList = new Array();
+
+    while(strData.indexOf(strIndex) != -1){
+      stringList[stringList.length] = strData.substring(0, strData.indexOf(strIndex));
+      strData = strData.substring(strData.indexOf(strIndex)+(strIndex.length), strData.length);
+    }
+    stringList[stringList.length] = strData;
+
+    return stringList;
+  }
+
+  // 서버 DB에서 통으로 들어온 문자열 데이터를 분할
+  function dataSlice(data) {
+    var slicedData = stringSplit(data, '|');
+
+    database = new Array(slicedData.length);
+
+    for(var i=0; i < (slicedData.length-1); i++) {
+      database[i] = stringSplit(slicedData[i], '@');
+    }
+
+    return database;
+  }
+
+  function loadStoreDB(param) {
+    var dataString = "id=" + param;
+
+    $.ajax({
+      type: "POST",
+      url:"http://61.245.230.97/SE/Server/item_store.php",
+      data: dataString,
+      crossDomain: true,
+      cache: false,
+
+      beforeSend: function() { },
+      success: function(data) {
+        storeDatabase = dataSlice(data);
+        globalStoreDatabase = storeDatabase;
+
+        onStoreStickerInnerHTML(storeDatabase);
+        onStoreImageInnerHTML(storeDatabase);
+        onStoreDesInnerHTML(storeDatabase);
+        onStoreTitleInnerHTML(storeDatabase);
+
+        isFavorStore(storeDatabase);
+        tryGeolocation();
+      }
+    });
+  }
+
+  function loadReviewDB(param) {
+    var dataString = "id=" + param;
+
+    $.ajax({
+      type: "POST",
+      url:"http://61.245.230.97/SE/Server/item_review.php",
+      data: dataString,
+      crossDomain: true,
+      cache: false,
+
+      beforeSend: function() { },
+      success: function(data) {
+        var reviewDatabase = dataSlice(data);
+        globalReviewDatabase = reviewDatabase;
+
+        onReviewListInnerHTML(reviewDatabase);
+
+        REVIEW_FAVOR_TIMER_FLAG = new Array(globalReviewDatabase.length-1);
+        REVIEW_UNFAVOR_TIMER_FLAG = new Array(globalReviewDatabase.length-1);
+
+        for(var i=0; i<REVIEW_FAVOR_TIMER_FLAG.length; i++) {
+          REVIEW_FAVOR_TIMER_FLAG[i] = false;
+          REVIEW_UNFAVOR_TIMER_FLAG[i] = false;
+        }
+      }
+    });
+  }
+
+
+    $(document).ready(function () {
+      DRAG_IMAGE_FLAG = 0;
+      IS_DRAG_FLAG = 400;
+
+      var posX_start = 0;
+      var posX_end = 0;
+
+      $('#slide').bind('touchstart', function(event) {
+        event.preventDefault();
+        posX_start = event.originalEvent.touches[0] || event.originalEvent.changedTouches[0];
+      });
+
+      $('#slide').bind('touchend', function(event) {
+        event.preventDefault();
+        posX_end = event.originalEvent.touches[0] || event.originalEvent.changedTouches[0];
+
+        dragImage(posX_start.pageX - posX_end.pageX);
+      });
+    });
+
+    // 뒤로 가기 버튼 함수
+    function prevBtn() {
+      location.href = "./list.html?category='" + storeDatabase[0][STORE_CATEGORY] + "'";
+    }
+
+    // 터치 시작점과 끝점을 판단해 이미지 슬라이드를 드래그 한건지를 판단.
+    function dragImage(value) {
+      // 다음 사진
+
+      // 이미지 4장일 때
+      if(globalStoreDatabase.length == 5) {
+        if(value >= IS_DRAG_FLAG) {
+          if(DRAG_IMAGE_FLAG == 0) {
+            var imgUrl = new String(globalStoreDatabase[DRAG_IMAGE_FLAG][STORE_MAIN_IMAGE].toString());
+            $('#slide_image').attr('src', imgUrl);
+            DRAG_IMAGE_FLAG++;
+          } else if(DRAG_IMAGE_FLAG == 1) {
+            var imgUrl = new String(globalStoreDatabase[DRAG_IMAGE_FLAG].toString());
+            $('#slide_image').attr('src', imgUrl);
+            DRAG_IMAGE_FLAG++;
+          } else if(DRAG_IMAGE_FLAG == 2) {
+            var imgUrl = new String(globalStoreDatabase[DRAG_IMAGE_FLAG].toString());
+            $('#slide_image').attr('src', imgUrl);
+            DRAG_IMAGE_FLAG++;
+          } else if(DRAG_IMAGE_FLAG == 3) {
+            var imgUrl = new String(globalStoreDatabase[DRAG_IMAGE_FLAG].toString());
+            $('#slide_image').attr('src', imgUrl);
+            DRAG_IMAGE_FLAG = 0;
+          }
+        }
+
+        // 이전 사진
+        if(value <= -IS_DRAG_FLAG) {
+          if(DRAG_IMAGE_FLAG == 0) {
+            var imgUrl = new String(globalStoreDatabase[DRAG_IMAGE_FLAG][STORE_MAIN_IMAGE].toString());
+            $('#slide_image').attr('src', imgUrl);
+            DRAG_IMAGE_FLAG = 3;
+          } else if(DRAG_IMAGE_FLAG == 1) {
+            var imgUrl = new String(globalStoreDatabase[DRAG_IMAGE_FLAG].toString());
+            $('#slide_image').attr('src', imgUrl);
+            DRAG_IMAGE_FLAG--;
+          } else if(DRAG_IMAGE_FLAG == 2) {
+            var imgUrl = new String(globalStoreDatabase[DRAG_IMAGE_FLAG].toString());
+            $('#slide_image').attr('src', imgUrl);
+            DRAG_IMAGE_FLAG--;
+          } else if(DRAG_IMAGE_FLAG == 3) {
+            var imgUrl = new String(globalStoreDatabase[DRAG_IMAGE_FLAG].toString());
+            $('#slide_image').attr('src', imgUrl);
+            DRAG_IMAGE_FLAG--;
+          }
+        }
+      } else if(globalStoreDatabase.length == 4) {
+        if(value >= IS_DRAG_FLAG) {
+          if(DRAG_IMAGE_FLAG == 0) {
+            var imgUrl = new String(globalStoreDatabase[DRAG_IMAGE_FLAG][STORE_MAIN_IMAGE].toString());
+            $('#slide_image').attr('src', imgUrl);
+            DRAG_IMAGE_FLAG++;
+          } else if(DRAG_IMAGE_FLAG == 1) {
+            var imgUrl = new String(globalStoreDatabase[DRAG_IMAGE_FLAG].toString());
+            $('#slide_image').attr('src', imgUrl);
+            DRAG_IMAGE_FLAG++;
+          } else if(DRAG_IMAGE_FLAG == 2) {
+            var imgUrl = new String(globalStoreDatabase[DRAG_IMAGE_FLAG].toString());
+            $('#slide_image').attr('src', imgUrl);
+            DRAG_IMAGE_FLAG = 0;
+          }
+        }
+
+        // 이전 사진
+        if(value <= -IS_DRAG_FLAG) {
+          if(DRAG_IMAGE_FLAG == 0) {
+            var imgUrl = new String(globalStoreDatabase[DRAG_IMAGE_FLAG][STORE_MAIN_IMAGE].toString());
+            $('#slide_image').attr('src', imgUrl);
+            DRAG_IMAGE_FLAG = 2;
+          } else if(DRAG_IMAGE_FLAG == 1) {
+            var imgUrl = new String(globalStoreDatabase[DRAG_IMAGE_FLAG].toString());
+            $('#slide_image').attr('src', imgUrl);
+            DRAG_IMAGE_FLAG--;
+          } else if(DRAG_IMAGE_FLAG == 2) {
+            var imgUrl = new String(globalStoreDatabase[DRAG_IMAGE_FLAG].toString());
+            $('#slide_image').attr('src', imgUrl);
+            DRAG_IMAGE_FLAG--;
+          }
+        }
+      } else if(globalStoreDatabase.length == 3) {
+        if(value >= IS_DRAG_FLAG) {
+          if(DRAG_IMAGE_FLAG == 0) {
+            var imgUrl = new String(globalStoreDatabase[DRAG_IMAGE_FLAG][STORE_MAIN_IMAGE].toString());
+            $('#slide_image').attr('src', imgUrl);
+            DRAG_IMAGE_FLAG++;
+          } else if(DRAG_IMAGE_FLAG == 1) {
+            var imgUrl = new String(globalStoreDatabase[DRAG_IMAGE_FLAG].toString());
+            $('#slide_image').attr('src', imgUrl);
+            DRAG_IMAGE_FLAG--;
+          }
+        }
+
+        // 이전 사진
+        if(value <= -IS_DRAG_FLAG) {
+          if(DRAG_IMAGE_FLAG == 0) {
+            var imgUrl = new String(globalStoreDatabase[DRAG_IMAGE_FLAG][STORE_MAIN_IMAGE].toString());
+            $('#slide_image').attr('src', imgUrl);
+            DRAG_IMAGE_FLAG++;
+          } else if(DRAG_IMAGE_FLAG == 1) {
+            var imgUrl = new String(globalStoreDatabase[DRAG_IMAGE_FLAG].toString());
+            $('#slide_image').attr('src', imgUrl);
+            DRAG_IMAGE_FLAG--;
+          }
+        }
+      }
+    }
+  </script>
+
+  <script>
+  // 헤더 영역에 가게 이름 업로딩.
+  function onStoreTitleInnerHTML(storeDatabase) {
+    var storeTitle = document.getElementById("store_title");
+    var innerhtml = "";
+
+    innerhtml += "<h1>" + storeDatabase[0][STORE_NAME] + "</h1>";
+
+    storeTitle.innerHTML = innerhtml;
+  }
+
+  // Sticker 영역 동적 할당 함수
+  function onStoreStickerInnerHTML(storeDatabase) {
+    var sticker = document.getElementById("store_sticker");
+    var innerhtml = "";
+
+    innerhtml +=      "<div class=\"content_store_sticker_favor_wrap\">";
+    innerhtml +=        "<div class=\"content_store_sticker_favor_icon_wrap\">";
+    innerhtml +=          "<img src=\"./image/좋아요.png\" alt=\"좋아요\" />";
+    innerhtml +=        "</div>";
+    innerhtml +=        "<div class=\"content_store_sticker_favor_value_wrap\">";
+    innerhtml +=          "<h2>" + storeDatabase[0][STORE_FAVOR] + "</h2>";
+    innerhtml +=        "</div>";
+    innerhtml +=      "</div>";
+    innerhtml +=      "<div class=\"content_store_sticker_category_wrap\">";
+    innerhtml +=        "<h2>" + storeDatabase[0][STORE_CATEGORY] + "</h2>";
+    innerhtml +=      "</div>";
+
+                      if(storeDatabase[0][STORE_ISWELLBEING] == "yes") {
+    innerhtml +=      "<div class=\"content_store_sticker_wellbeing_wrap\">";
+    innerhtml +=        "<img src=\"./image/웰빙2.png\" alt=\"웰빙\" />";
+    innerhtml +=      "</div>";
+                      }
+
+                      if(storeDatabase[0][STORE_ISSINGLE] == "yes") {
+    innerhtml +=      "<div class=\"content_store_sticker_single_wrap\">";
+    innerhtml +=        "<img src=\"./image/혼밥2.png\" alt=\"혼밥\" />";
+    innerhtml +=      "</div>";
+                      }
+
+    sticker.innerHTML = innerhtml;
+  }
+
+  // Store 영역에서 슬라이드 이미지 부분 동적 할당 함수
+  function onStoreImageInnerHTML(storeDatabase) {
+    var slideImage = document.getElementById("slide");
+    var innerhtml = "";
+
+    innerhtml += "<div><img id=\"slide_image\" src=\"" + storeDatabase[0][STORE_MAIN_IMAGE] + "\" alt=\"가게 이미지\" /></div>";
+
+    slideImage.innerHTML = innerhtml;
+  }
+
+  // Store 영역에서 설명부분 동적 할당 함수.
+  function onStoreDesInnerHTML(storeDatabase) {
+    var description = document.getElementById("store_description");
+    var innerhtml = "";
+
+    innerhtml += "<div class=\"content_store_description_text_wrap\">";
+    innerhtml +=    "<div class=\"content_store_description_text_address_wrap\">";
+    innerhtml +=      "<div class=\"content_store_description_text_address_icon_wrap\">";
+    innerhtml +=        "<p>주소 </p>";
+    innerhtml +=      "</div>";
+    innerhtml +=      "<div class=\"content_store_description_text_address_value_wrap\">";
+    innerhtml +=        "<p>" + storeDatabase[0][STORE_ADDRESS] + "</p>";
+    innerhtml +=      "</div>";
+    innerhtml +=    "</div>";
+    innerhtml +=    "<div class=\"content_store_description_text_tel_wrap\">";
+    innerhtml +=      "<div class=\"content_store_description_text_tel_icon_wrap\">";
+    innerhtml +=        "<p>전화번호 </p>";
+    innerhtml +=      "</div>";
+    innerhtml +=      "<div class=\"content_store_description_text_tel_value_wrap\">";
+    innerhtml +=        "<p>" + storeDatabase[0][STORE_TEL] + "</p>";
+    innerhtml +=      "</div>";
+    innerhtml +=    "</div>"
+    innerhtml +=    "<div class=\"content_store_description_text_opTime_wrap\">";
+    innerhtml +=      "<div class=\"content_store_description_text_opTime_icon_wrap\">";
+    innerhtml +=        "<p>운영시간</p>";
+    innerhtml +=      "</div>";
+    innerhtml +=      "<div class=\"content_store_description_text_opTime_value_wrap\">";
+    innerhtml +=        "<p>" + storeDatabase[0][STORE_OPTIME] + "</p>";
+    innerhtml +=      "</div>";
+    innerhtml +=    "</div>";
+    innerhtml +=    "<div class=\"content_store_description_text_menu_wrap\">";
+    innerhtml +=      "<div class=\"content_store_description_text_menu_icon_wrap\">";
+    innerhtml +=        "<p>메뉴</p>";
+    innerhtml +=      "</div>";
+    innerhtml +=      "<div class=\"content_store_description_text_menu_value_wrap\">";
+    innerhtml +=        "<p>" + storeDatabase[0][STORE_MENU] + "</p>";
+    innerhtml +=      "</div>";
+    innerhtml +=    "</div>";
+    innerhtml +=    "<div class=\"content_store_description_text_isReservation_wrap\">";
+    innerhtml +=      "<div class=\"content_store_description_text_isReservation_icon_wrap\">";
+    innerhtml +=        "<p>예약</p>";
+    innerhtml +=      "</div>";
+    innerhtml +=      "<div class=\"content_store_description_text_isReservation_value_wrap\">";
+    innerhtml +=        "<p>" + storeDatabase[0][STORE_ISRESERVE] + "</p>";
+    innerhtml +=      "</div>";
+    innerhtml +=    "</div>";
+    innerhtml +=    "<div class=\"content_store_description_text_isDelivery_wrap\">";
+    innerhtml +=      "<div class=\"content_store_description_text_isDelivery_icon_wrap\">";
+    innerhtml +=        "<p>배달</p>";
+    innerhtml +=      "</div>";
+    innerhtml +=      "<div class=\"content_store_description_text_isDelivery_value_wrap\">";
+    innerhtml +=        "<p>" + storeDatabase[0][STORE_ISDELIVERY] + "</p>";
+    innerhtml +=      "</div>";
+    innerhtml +=    "</div>";
+    innerhtml +=    "<div class=\"content_store_description_text_explain_wrap\">";
+    innerhtml +=      "<div class=\"content_store_description_text_explain_icon_wrap\">";
+    innerhtml +=        "<p>설명</p>";
+    innerhtml +=      "</div>";
+    innerhtml +=      "<div class=\"content_store_description_text_explain_value_wrap\">";
+    innerhtml +=        "<p>" + storeDatabase[0][STORE_EXPLAIN] + "</p>";
+    innerhtml +=      "</div>";
+    innerhtml +=    "</div>";
+    innerhtml += "</div>";
+    innerhtml += "<div class=\"content_store_description_location_wrap\">";
+    innerhtml += "</div>";
+
+    description.innerHTML = innerhtml;
+  }
+
+  // 좋아요 버튼 클릭시 발생하는 함수.
+  function updateFavor(index) {
+    if(REVIEW_FAVOR_TIMER_FLAG[index] == false) {
+      var dataString = "reviewCode=" + globalReviewDatabase[index][REVIEW_CODE];
+
+      $.ajax({
+        type: "POST",
+        url:"http://61.245.230.97/SE/Server/review_update_favor.php",
+        data: dataString,
+        crossDomain: true,
+        cache: false,
+
+        beforeSend: function() { },
+        success: function(data) {
+          var favor_value = Number(globalReviewDatabase[index][REVIEW_FAVOR]);
+
+          favor_value += 1;
+          globalReviewDatabase[index][REVIEW_FAVOR] = favor_value.toString();
+          onReviewListInnerHTML(globalReviewDatabase);
+
+          REVIEW_FAVOR_TIMER_FLAG[index] = true;
+
+          setTimeout(function() { REVIEW_FAVOR_TIMER_FLAG[index] = false; }, 300000);
+        }
+      });
+    } else {
+      alert("이미 좋아요 눌렀어용");
+    }
+  }
+
+  // 좋아요 버튼 클릭시 발생하는 함수.
+  function updateUnfavor(index) {
+    if(REVIEW_UNFAVOR_TIMER_FLAG[index] == false) {
+      var dataString = "reviewCode=" + globalReviewDatabase[index][REVIEW_CODE];
+
+      $.ajax({
+        type: "POST",
+        url:"http://61.245.230.97/SE/Server/review_update_unfavor.php",
+        data: dataString,
+        crossDomain: true,
+        cache: false,
+
+        beforeSend: function() { },
+        success: function(data) {
+          var unfavor_value = Number(globalReviewDatabase[index][REVIEW_UNFAVOR]);
+
+          unfavor_value += 1;
+          globalReviewDatabase[index][REVIEW_UNFAVOR] = unfavor_value.toString();
+
+          onReviewListInnerHTML(globalReviewDatabase);
+
+          REVIEW_UNFAVOR_TIMER_FLAG[index] = true;
+
+          setTimeout(function() { REVIEW_UNFAVOR_TIMER_FLAG[index] = false; }, 300000);
+        }
+      });
+    } else {
+      alert("싫어요를 이미 눌렀용~~");
+    }
+  }
+
+
+
+  function onReviewListInnerHTML(reviewDatabase) {
+    var review = document.getElementById("review");
+    var innerhtml = "";
+
+    innerhtml +=  "<a href=\"./review_write.html?id=" + globalStoreDatabase[0][STORE_CODE] + "&name=" + globalStoreDatabase[0][STORE_NAME] + "\">";
+    innerhtml +=    "<div class=\"content_review_writeBtn_wrap\">";
+    innerhtml +=      "<h2>리뷰 작성하기</h2>";
+    innerhtml +=    "</div>";
+    innerhtml +=  "</a>";
+
+    innerhtml +=   "<div class=\"content_review_list_wrap\">";
+
+    for(var i=0; i<(reviewDatabase.length-1); i++) {
+
+      innerhtml +=  "<div class=\"content_review_list_item_wrap\">";
+      innerhtml +=    "<div class=\"content_review_list_item_top_wrap\">";
+      innerhtml +=      "<div class=\"content_review_list_item_top_image_wrap\">";
+                          if(reviewDatabase[i][REVIEW_IMAGE] != "error") {
+      innerhtml +=        "<img src=\"" + reviewDatabase[i][REVIEW_IMAGE] + "\" alt=\"리뷰 이미지\">";
+                          }
+      innerhtml +=      "</div>";
+      innerhtml +=      "<div class=\"content_review_list_item_top_description_wrap\">";
+      innerhtml +=        "<div class=\"content_review_list_item_top_description_reviewer_wrap\">";
+      innerhtml +=          "<p>" + reviewDatabase[i][REVIEW_REVIEWER] + "</p>";
+      innerhtml +=        "</div>";
+      innerhtml +=        "<div class=\"content_review_list_item_top_description_text_wrap\">";
+      innerhtml +=          "<p>" + reviewDatabase[i][REVIEW_TEXT] + "</p>";
+      innerhtml +=        "</div>";
+      innerhtml +=      "</div>";
+      innerhtml +=    "</div>";
+      innerhtml +=    "<div class=\"content_review_list_item_bottom_wrap\">";
+      innerhtml +=      "<div class=\"content_review_list_item_bottom_sticker_wrap\">";
+      innerhtml +=        "<div class=\"content_review_list_item_bottom_sticker_starPoint_wrap\">";
+      innerhtml +=          "<div class=\"content_review_list_item_bottom_sticker_starPoint_value_wrap\">";
+                              if( reviewDatabase[i][REVIEW_STARPOINT] >= 1) {
+      innerhtml +=            "<img id=\"star1\" src=\"./image/full_star.png\" alt=\"별\"/>";
+                              }
+      innerhtml +=          "</div>";
+      innerhtml +=          "<div class=\"content_review_list_item_bottom_sticker_starPoint_value_wrap\">";
+                              if( reviewDatabase[i][REVIEW_STARPOINT] >= 2) {
+      innerhtml +=            "<img id=\"star2\" src=\"./image/full_star.png\" alt=\"별\"/>";
+                              }
+      innerhtml +=          "</div>";
+      innerhtml +=          "<div class=\"content_review_list_item_bottom_sticker_starPoint_value_wrap\">";
+                              if( reviewDatabase[i][REVIEW_STARPOINT] >= 3) {
+      innerhtml +=            "<img id=\"star3\" src=\"./image/full_star.png\" alt=\"별\"/>";
+                              }
+      innerhtml +=          "</div>";
+      innerhtml +=          "<div class=\"content_review_list_item_bottom_sticker_starPoint_value_wrap\">";
+                              if( reviewDatabase[i][REVIEW_STARPOINT] >= 4) {
+      innerhtml +=            "<img id=\"star4\" src=\"./image/full_star.png\" alt=\"별\"/>";
+                              }
+      innerhtml +=          "</div>";
+      innerhtml +=          "<div class=\"content_review_list_item_bottom_sticker_starPoint_value_wrap\">";
+                              if( reviewDatabase[i][REVIEW_STARPOINT] >= 5) {
+      innerhtml +=            "<img id=\"star5\" src=\"./image/full_star.png\" alt=\"별\"/>";
+                              }
+      innerhtml +=          "</div>";
+      innerhtml +=        "</div>";
+      innerhtml +=        "<div class=\"content_review_list_item_bottom_sticker_favor_wrap\">";
+      innerhtml +=          "<a href=\"javascript:updateFavor(" + i + ");\">";
+      innerhtml +=            "<div class=\"content_review_list_item_bottom_sticker_favor_icon_wrap\">";
+      innerhtml +=              "<img src=\"./image/좋아요-[단골가게].png\" alt=\"좋아요 이미지\" />";
+      innerhtml +=            "</div>";
+      innerhtml +=          "</a>";
+      innerhtml +=          "<div class=\"content_review_list_item_bottom_sticker_favor_value_wrap\">";
+      innerhtml +=            "<p>" + reviewDatabase[i][REVIEW_FAVOR] + "</p>"
+      innerhtml +=          "</div>";
+      innerhtml +=        "</div>";
+      innerhtml +=        "<div class=\"content_review_list_item_bottom_sticker_unFavor_wrap\">";
+      innerhtml +=          "<a href=\"javascript:updateUnfavor(" + i + ");\">";
+      innerhtml +=            "<div class=\"content_review_list_item_bottom_sticker_unFavor_icon_wrap\">";
+      innerhtml +=              "<img src=\"./image/싫어요-[단골가게].png\" alt=\"싫어요 이미지\"/>";
+      innerhtml +=            "</div>";
+      innerhtml +=          "</a>";
+      innerhtml +=          "<div class=\"content_review_list_item_bottom_sticker_unFavor_value_wrap\">";
+      innerhtml +=            "<p>" + reviewDatabase[i][REVIEW_UNFAVOR] + "</p>";
+      innerhtml +=          "</div>";
+      innerhtml +=        "</div>";
+      innerhtml +=      "</div>";
+      innerhtml +=    "</div>"
+      innerhtml +=  "</div>";
+    }
+
+    innerhtml +=   "</div>";
+
+    review.innerHTML = innerhtml;
+  }
+
+
+  var apiGeolocationSuccess = function(position) {
+      // alert("API geolocation success!\n\nlat = " + position.coords.latitude + "\nlng = " + position.coords.longitude);
+  };
+
+  var tryAPIGeolocation = function() {
+      jQuery.post( "https://www.googleapis.com/geolocation/v1/geolocate?key=AIzaSyDCa1LUe1vOczX1hO_iGYgyo8p_jYuGOPU", function(success) {
+          apiGeolocationSuccess({coords: {latitude: success.location.lat, longitude: success.location.lng}});
+      })
+      .fail(function(err) {
+          // alert("API Geolocation error! \n\n"+err);
+      });
+  };
+
+  var browserGeolocationSuccess = function(position) {
+      // alert("Browser geolocation success!\n\nlat = " + position.coords.latitude + "\nlng = " + position.coords.longitude);
+
+      initialize(position.coords.latitude, position.coords.longitude, Number(storeDatabase[0][STORE_LAT]), Number(storeDatabase[0][STORE_LNG]));
+  };
+
+  var browserGeolocationFail = function(error) {
+
+      switch (error.code) {
+          case error.TIMEOUT:
+              alert("Browser geolocation error !\n\nTimeout.");
+              break;
+            case error.PERMISSION_DENIED:
+              if(error.message.indexOf("Only secure origins are allowed") == 0) {
+                  tryAPIGeolocation();
+              }
+              break;
+            case error.POSITION_UNAVAILABLE:
+              alert("Browser geolocation error !\n\nPosition unavailable.");
+              break;
+          }
+  };
+
+  var tryGeolocation = function() {
+      if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(
+                  browserGeolocationSuccess,
+                  browserGeolocationFail);
+    }
+  };
+
+  // 구글 맵스에서 가게 위치와 유저 위치 가운데에 초점 맞추기
+  function centerPosition(lng_user, lat_user, lng_store, lat_store) {
+    var lng_center = (lng_user + lng_store) / 2;
+    var lat_center = (lat_user + lat_store) / 2;
+
+    return new google.maps.LatLng(lat_center, lng_center);
+  }
+
+  // 구글맵스 API를 활용해 지도를 보여주는 함수.
+  function initialize(lat_user, lng_user, lat_store, lng_store) {
+    // 유저의 위치는 파라미터로 받아옴
+    var zoomLevel = 15;
+
+    var markerTitle = "위즈소프트";
+    var markerMaxWidth = 300;
+
+    var content = "asdasdasd";
+
+    var iconImage = new google.maps.MarkerImage('./image/googleMaps/userMarker.png');
+
+    var latlng = [new google.maps.LatLng(lat_store, lng_store), new google.maps.LatLng(lat_user, lng_user)];
+    var mapOptions = {
+      zoom : zoomLevel,
+      center : centerPosition(lng_user, lat_user, lng_store, lat_store)
+    }
+
+    var map = new google.maps.Map(document.getElementById('map_view'), mapOptions);
+
+    // for(var i=0; i< 2; i++) {
+    //   var marker = new google.maps.Marker({
+    //     position : latlng[i],
+    //     map : map,
+    //     icon : iconImage
+    //   });
+    // }
+
+    var marker = new google.maps.Marker({
+      position : latlng[0],
+      map : map,
+      icon : iconImage
+    });
+
+    marker = new google.maps.Marker({
+      position : latlng[1],
+      map : map
+    });
+
+    var infoWindow = new google.maps.InfoWindow(
+      {
+        content: content,
+        maxWidth: markerMaxWidth
+      }
+    );
+
+    google.maps.event.addListener(marker, 'click', function() {
+        infoWindow.open(map, marker);
+    });
+  }
+  </script>
+</head>
+<body>
+  <center>
+  <div class="total_wrap">
+    <div class="header_wrap">
+      <!-- 뒤로가기 -->
+      <div class="header_prevBtn_wrap">
+        <a href="javascript:prevBtn();"><img src="./image/뒤로가기하양.png" alt="뒤로가기" /></a>
+      </div>
+
+      <!-- 업체명 -->
+      <div id="store_title" class="header_storeTitle_wrap">
+      </div>
+
+      <!-- 좋아요 버튼 -->
+      <div class="header_favorBtn_wrap">
+        <img id="favor_btn_store" src="./image/좋아요.png" alt="좋아요">
+      </div>
+    </div>
+
+    <div class="content_wrap">
+      <div class="content_store_wrap">
+        <div id="store_sticker" class="content_store_sticker_wrap">
+        </div>
+
+        <!-- 업체 사진 -->
+        <div id="slide" class="content_store_slideImage_wrap">
+        </div>
+
+        <!-- 업체 설명 -->
+        <div id="store_description" class="content_store_description_wrap">
+        </div>
+
+        <div id="map_view" class="content_store_location_wrap">
+        </div>
+      </div>
+
+      <div id="review" class="content_review_wrap">
+        <!-- 동적 할당 영역 -->
+      </div>
+    </div>
+
+    <div class="tailer_wrap">
+    </div>
+  </div>
+  </center>
+</body>
+</html>

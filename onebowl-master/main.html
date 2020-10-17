@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title></title>
+
+  <link rel="stylesheet" href="./css/base.css?ver=2">
+  <link rel="stylesheet" href="./css/main.css?ver=8">
+  <style>
+  </style>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+  <script>
+  $(document).ready(function () {
+    DRAG_IMAGE_FLAG = 0;
+    IS_DRAG_FLAG = 400;
+
+    // Nav가 열려있을 경우 true, 닫혀있을 경우 false.
+    isNav = false;
+
+    var posX_start = 0;
+    var posX_end = 0;
+
+    $('#category_total_img').bind('touchstart', function(event) {
+      event.preventDefault();
+      posX_start = event.originalEvent.touches[0] || event.originalEvent.changedTouches[0];
+    });
+
+    $('#category_total_img').bind('touchend', function(event) {
+      event.preventDefault();
+      posX_end = event.originalEvent.touches[0] || event.originalEvent.changedTouches[0];
+
+      if((posX_end.pageX - posX_start.pageX) <= 10) {
+        location.href = "./list.html?category='전체'";
+      }
+    });
+
+    $('#category_single_img').bind('touchstart', function(event) {
+      event.preventDefault();
+      posX_start = event.originalEvent.touches[0] || event.originalEvent.changedTouches[0];
+    });
+
+    $('#category_single_img').bind('touchend', function(event) {
+      event.preventDefault();
+      posX_end = event.originalEvent.touches[0] || event.originalEvent.changedTouches[0];
+
+      if((posX_end.pageX - posX_start.pageX) <= 10) {
+        location.href = "./list.html?isSingle='yes'";
+      }
+    });
+
+    $('#category_western_img').bind('touchstart', function(event) {
+      event.preventDefault();
+      posX_start = event.originalEvent.touches[0] || event.originalEvent.changedTouches[0];
+    });
+
+    $('#category_western_img').bind('touchend', function(event) {
+      event.preventDefault();
+      posX_end = event.originalEvent.touches[0] || event.originalEvent.changedTouches[0];
+
+      if((posX_end.pageX - posX_start.pageX) <= 10) {
+        location.href = "./list.html?category='양식'";
+      }
+    });
+
+    $('#category_korean_img').bind('touchstart', function(event) {
+      event.preventDefault();
+      posX_start = event.originalEvent.touches[0] || event.originalEvent.changedTouches[0];
+    });
+
+    $('#category_korean_img').bind('touchend', function(event) {
+      event.preventDefault();
+      posX_end = event.originalEvent.touches[0] || event.originalEvent.changedTouches[0];
+
+      if((posX_end.pageX - posX_start.pageX) <= 10) {
+        location.href = "./list.html?category='한식'";
+      }
+    });
+
+    $('#category_chinese_img').bind('touchstart', function(event) {
+      event.preventDefault();
+      posX_start = event.originalEvent.touches[0] || event.originalEvent.changedTouches[0];
+    });
+
+    $('#category_chinese_img').bind('touchend', function(event) {
+      event.preventDefault();
+      posX_end = event.originalEvent.touches[0] || event.originalEvent.changedTouches[0];
+
+      if((posX_end.pageX - posX_start.pageX) <= 10) {
+        location.href = "./list.html?category='중식'";
+      }
+    });
+
+    $('#category_univ_img').bind('touchstart', function(event) {
+      event.preventDefault();
+      posX_start = event.originalEvent.touches[0] || event.originalEvent.changedTouches[0];
+    });
+
+    $('#category_univ_img').bind('touchend', function(event) {
+      event.preventDefault();
+      posX_end = event.originalEvent.touches[0] || event.originalEvent.changedTouches[0];
+
+      if((posX_end.pageX - posX_start.pageX) <= 10) {
+        location.href = "./list.html?category='학식'";
+      }
+    });
+
+    $('#category_japan_img').bind('touchstart', function(event) {
+      event.preventDefault();
+      posX_start = event.originalEvent.touches[0] || event.originalEvent.changedTouches[0];
+    });
+
+    $('#category_japan_img').bind('touchend', function(event) {
+      event.preventDefault();
+      posX_end = event.originalEvent.touches[0] || event.originalEvent.changedTouches[0];
+
+      if((posX_end.pageX - posX_start.pageX) <= 10) {
+        location.href = "./list.html?category='일식'";
+      }
+    });
+
+    $('#category_wellbeing_img').bind('touchstart', function(event) {
+      event.preventDefault();
+      posX_start = event.originalEvent.touches[0] || event.originalEvent.changedTouches[0];
+    });
+
+    $('#category_wellbeing_img').bind('touchend', function(event) {
+      event.preventDefault();
+      posX_end = event.originalEvent.touches[0] || event.originalEvent.changedTouches[0];
+
+      if((posX_end.pageX - posX_start.pageX) <= 10) {
+        location.href = "./list.html?isWellbeing='yes'";
+      }
+    });
+
+    $('.content_category_wrap').bind('touchstart', function(event) {
+      event.preventDefault();
+      posX_start = event.originalEvent.touches[0] || event.originalEvent.changedTouches[0];
+    });
+
+    $('.content_category_wrap').bind('touchend', function(event) {
+      event.preventDefault();
+      posX_end = event.originalEvent.touches[0] || event.originalEvent.changedTouches[0];
+
+      if(isNav == false) {
+        onNavToDrag(posX_start.pageX, posX_end.pageX);
+      } else {
+        offNavToTouch(posX_start.pageX);
+      }
+    });
+  });
+
+  // nav를 구현시에 애니메이션 일으키는 함수.
+  function onNavAnimation() {
+    $('.nav_wrap').animate({ width: 800 }, 'fast');
+  }
+
+  // nav를 닫을 때 애니메이션을 일으키는 함수.
+  function offNavAnimation() {
+
+  }
+
+  // 드래그를 통해서 nav를 구현한다.
+  function onNavToDrag(start, end) {
+
+    if(end - start >= 400) {
+      onNavInnerHTML();
+      onNavAnimation();
+      isNav = true;
+    }
+  }
+
+  function offNavToTouch(touch) {
+    if(touch >= 850) {
+      offNavInnerHTML();
+      isNav = false;
+    }
+  }
+
+  $(document).ready(function () {
+
+    // 쿠키에 저장되어 있는 아이디 값 가지는 변수.
+    gobalId = null;
+
+    isLogin();
+  });
+  // 로그인이 되어있는지 아닌지 판단하는 함수.
+  function isLogin() {
+    var dataString = "";
+
+    $.ajax({
+      type: "POST",
+      url:"http://61.245.230.97/SE/Server/isLogin.php",
+      data: dataString,
+      crossDomain: true,
+      cache: false,
+
+      beforeSend: function() { },
+      success: function(data) {
+        if(data == "false") {
+
+          alert("로그인이 필요한 서비스입니다.");
+          location.href = "./index.html";
+        } else {
+          globalId = data;
+        }
+      }
+    });
+  }
+
+  function offNavInnerHTML() {
+    var nav = document.getElementById('nav');
+    var innerhtml = "";
+
+    nav.innerHTML = innerhtml;
+  }
+
+  function onNavInnerHTML() {
+    var nav = document.getElementById('nav');
+    var innerhtml = "";
+
+    innerhtml += "<div class=\"nav_wrap\">";
+    innerhtml +=  "<div class=\"nav_header_wrap\">";
+                    // 로고
+    innerhtml +=    "<div class=\"nav_header_logo_wrap\">";
+    innerhtml +=      "<img src=\"./image/심볼.png\" alt=\"로고 이미지\">";
+    innerhtml +=    "</div>";
+
+                    // 뭐 먹을까 ?
+    innerhtml +=    "<div class=\"nav_header_title_wrap\">";
+    innerhtml +=      "<font> 원 그 릇</font>";
+    innerhtml +=    "</div>";
+    innerhtml +=  "</div>";
+
+    innerhtml +=  "<div class=\"nav_content_wrap\">";
+                    // 마이 이미지
+    innerhtml +=    "<div class=\"nav_content_myImage_wrap\">";
+    innerhtml +=      "<img src=\"./image/남자.png\" alt=\"마이 이미지\">";
+    innerhtml +=    "</div>";
+
+                    // 마이 아이디
+    innerhtml +=    "<div class=\"nav_content_myId_wrap\">";
+    innerhtml +=      "<p>" + globalId + "님</p>";
+    innerhtml +=    "</div>";
+
+                    // 단골가게 (좋아요 목록)
+    innerhtml +=    "<a href=\"./list.html?id=" + globalId + "\">";
+    innerhtml +=    "<div class=\"nav_content_favorStore_wrap\">";
+    innerhtml +=      "<div class=\"nav_content_favorStore_icon_wrap\">";
+    innerhtml +=        "<img src=\"./image/좋아요-[단골가게].png\" alt=\"단골가게 아이콘\" />";
+    innerhtml +=      "</div>";
+    innerhtml +=      "<div class=\"nav_content_favorStore_title_wrap\">";
+    innerhtml +=        "<font>좋아요 [단골가게]</font>";
+    innerhtml +=      "</div>";
+    innerhtml +=    "</div>";
+    innerhtml +=    "</a>";
+
+                    // 학사 이벤트 달력
+    innerhtml +=    "<a href=\"./calendar.html\">";
+    innerhtml +=    "<div class=\"nav_content_calendar_wrap\">";
+    innerhtml +=      "<div class=\"nav_content_calendar_icon_wrap\">";
+    innerhtml +=        "<img src=\"./image/캠퍼스-이벤트.png\" alt=\"달력 아이콘\" />";
+    innerhtml +=      "</div>";
+    innerhtml +=      "<div class=\"nav_content_calendar_title_wrap\">";
+    innerhtml +=        "<font>캠퍼스 이벤트</font>";
+    innerhtml +=      "</div>";
+    innerhtml +=    "</div>";
+    innerhtml +=    "</a>";
+
+                    // 만든이
+    innerhtml +=    "<a href=\"./makers.html\">";
+    innerhtml +=    "<div class=\"nav_content_author_wrap\">";
+    innerhtml +=      "<div class=\"nav_content_author_icon_wrap\">";
+    innerhtml +=        "<img src=\"./image/만든이.png\" alt=\"만든이 아이콘\" />";
+    innerhtml +=      "</div>";
+    innerhtml +=      "<div class=\"nav_content_author_title_wrap\">";
+    innerhtml +=        "<font>만든이</font>";
+    innerhtml +=      "</div>";
+    innerhtml +=    "</div>";
+    innerhtml +=    "</a>";
+
+                    // 로그아웃
+    innerhtml +=    "<a href=\"javascript:logout();\">";
+    innerhtml +=    "<div class=\"nav_content_logout_wrap\">";
+    innerhtml +=      "<div class=\"nav_content_logout_icon_wrap\">";
+    innerhtml +=        "<img src=\"./image/로그아웃.png\" alt=\"로그아웃 아이콘\" />";
+    innerhtml +=      "</div>";
+    innerhtml +=      "<div class=\"nav_content_logout_title_wrap\">";
+    innerhtml +=        "<font>로그아웃</font>";
+    innerhtml +=      "</div>";
+    innerhtml +=    "</div>";
+    innerhtml +=    "</a>";
+
+    innerhtml +=  "</div>";
+
+    innerhtml +=  "<div class=\"nav_tailer_wrap\">";
+    innerhtml +=  "</div>";
+    innerhtml += "</div>";
+
+    nav.innerHTML = innerhtml;
+  }
+
+  // 가게 검색하는 함수.
+  function searchStore() {
+    var searchInput = document.getElementById("search_input");
+
+    if(searchInput.value == "") {
+      alert("검색어를 입력해 주세요.");
+      searchInput.focus();
+      return;
+    }
+    location.href="./list.html?name=" + searchInput.value;
+  }
+
+  // 클릭 시 로그아웃
+  function logout() {
+    var dataString = "";
+
+    $.ajax({
+      type: "POST",
+      url:"http://61.245.230.97/SE/Server/logout.php",
+      data: dataString,
+      crossDomain: true,
+      cache: false,
+
+      beforeSend: function() { },
+      success: function(data) {
+        location.href="./index.html";
+      }
+    });
+  }
+
+  function menuBtn() {
+    onNavInnerHTML();
+    onNavAnimation();
+    isNav = true;
+  }
+  </script>
+</head>
+<body>
+  <div id="nav">
+    <!-- 동적 입력 부분 -->
+  </div>
+
+  <center>
+  <div class="total_wrap">
+    <div class="header_wrap">
+
+      <!-- 빵모양 메뉴 -->
+      <div class="header_menu_wrap">
+        <a href="javascript:menuBtn();"><img src="./image/바.png" alt ="메뉴" /></a>
+      </div>
+
+      <!-- 로고 -->
+      <div class="header_logo_wrap">
+        <img src="./image/심볼.png" alt="로고" />
+      </div>
+
+      <!-- 검색 입력 란-->
+      <div class="header_searchInput_wrap">
+        <input id="search_input" type="text" placeholder="  가게를 검색하세요!!" />
+      </div>
+
+      <!-- 검색 버튼 -->
+      <div class="header_searchBtn_wrap">
+        <a href="javascript:searchStore();"><img src="./image/돋보기.png" alt="검색" /></a>
+      </div>
+
+      <!-- 리뷰-->
+      <div class="header_review_wrap">
+        <a href="./review_search.html"><img src="./image/리뷰.png" alt="리뷰" /></a>
+      </div>
+    </div>
+
+    <div class="content_wrap">
+      <!-- 학사 공지 -->
+      <div class="content_info_wrap">
+      </div>
+
+      <!-- 카테고리 -->
+      <div class="content_category_wrap">
+        <!-- 전체 -->
+        <div class="content_category_total_wrap">
+          <a href="./list.html?category='전체'"><img id="category_total_img" src="./image/전체.png" alt="전체" /></a>
+        </div>
+
+        <!-- 혼밥족 -->
+        <div class="content_category_single_wrap">
+          <a href="./list.html?category='혼밥'"><img id="category_single_img" src="./image/혼밥.png" alt="혼밥족" /></a>
+        </div>
+
+        <!-- 한식 -->
+        <div class="content_category_korean_wrap">
+          <a href="./list.html?category='한식'"><img id="category_korean_img" src="./image/한식.png" alt="한식" /></a>
+        </div>
+
+        <!-- 양식 -->
+        <div class="content_category_western_wrap">
+          <a href="./list.html?category='양식'"><img id="category_western_img" src="./image/양식.png" alt="양식" /></a>
+        </div>
+
+        <!-- 중식 -->
+        <div class="content_category_chinese_wrap">
+          <a href="./list.html?category='중식'"><img id="category_chinese_img" src="./image/중식.png" alt="중식" /></a>
+        </div>
+
+        <!-- 일식 -->
+        <div class="content_category_japan_wrap">
+          <a href="./list.html?category='일식'"><img id="category_japan_img" src="./image/일식.png" alt="일식" /></a>
+        </div>
+
+        <!-- 학식 -->
+        <div class="content_category_univ_wrap">
+          <a href="./list.html?category='학식'"><img id="category_univ_img" src="./image/학식.png" alt="학식" /></a>
+        </div>
+
+        <!-- 웰빙 -->
+        <div class="content_category_wellbeing_wrap">
+          <a href="./list.html?category='웰빙'"><img id="category_wellbeing_img" src="./image/웰빙.png" alt="웰빙" /></a>
+        </div>
+      </div>
+    </div>
+
+    <div class="tailer_wrap">
+      <center>
+      <br>
+      <h5>Copyright(c)2017 Onebowl All rights reserved.<br>
+        Designed by Onebowl<br>
+        Jeonbuk Iksan Sindong 272, Wonkwang Univ.</h5>
+      </center>
+    </div>
+
+  </div>
+  </center>
+</body>
+</html>

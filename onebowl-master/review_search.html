@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title></title>
+
+  <link rel="stylesheet" href="./css/base.css">
+  <link rel="stylesheet" href="./css/review_search.css">
+
+  <style>
+  </style>
+
+  <script>
+    // 웹에서 리뷰 검색하는 기능 네이버에 연동된다.
+    function searchWeb() {
+      var searchText = document.getElementById('search_text');
+
+      if(searchText.value == "") {
+        alert("검색할 가게를 입력하세요");
+        searchText.focus();
+        return;
+      }
+
+      location.href = "https://search.naver.com/search.naver?where=nexearch&sm=top_hty&fbm=1&ie=utf8&query=원광대 " + searchText.value;
+    }
+  </script>
+</head>
+<body>
+  <center>
+  <div class="total_wrap">
+    <div class="header_wrap">
+      <div class="header_bar_wrap">
+      </div>
+
+      <!-- 뒤로가기 -->
+      <div class="header_prevBtn_wrap">
+        <a href="./main.html"><img src="./image/뒤로가기.png" alt="뒤로가기" /></a>
+      </div>
+
+      <!-- 로고 -->
+      <div class="header_logo_wrap">
+        <font>웹 리뷰 찾기</font>
+      </div>
+    </div>
+
+    <div class="content_wrap">
+      <div class="content_reviewForm_wrap">
+
+        <!-- 리뷰 검색 아이콘 -->
+        <div class="content_reviewForm_searchIcon_wrap">
+          <img src="./image/돋보기.png" alt="검색 이미지" />
+        </div>
+
+        <!-- 리뷰 검색 입력 란 -->
+        <div class="content_reviewForm_searchInput_wrap">
+          <input id="search_text" type="text" placeholder="  리뷰를 검색하세요." />
+        </div>
+
+        <!-- 리뷰 검색 버튼-->
+        <div class="content_reviewForm_searchBtn_wrap">
+          <a href="javascript:searchWeb();"><img src="./image/검색.png" alt="검색" /></a>
+        </div>
+      </div>
+    </div>
+
+    </div>
+
+    <div class="tailer_wrap">
+    </div>
+  </div>
+  </center>
+</body>
+</html>

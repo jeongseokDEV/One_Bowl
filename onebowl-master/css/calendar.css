@@ -1,0 +1,34 @@
+.total_wrap { width: 100%; height: 100%; }
+
+.header_wrap { width: 100%; height: 8%; background-color: #FCD951; }
+.content_wrap { width: 100%; height: 95%; background-color: #f4e6b8; }
+.tailer_wrap { width: 100%; height: 0%; }
+
+.header_prevBtn_wrap { width: 9%; height: 45%; float: left; margin-left: 2%; margin-top: 3%; }
+.header_prevBtn_wrap img { width: 75%; height: 100%; }
+
+.header_title_wrap { width: 80%; height: 100%; float: left; }
+.header_title_wrap h2 { color: #ffffff; font-size: 40pt; margin-top: 4%; margin-right: 4%; }
+
+.content_calendar_wrap { width: 100%; height: 96%; padding-top: 4%; }
+
+.content_calendar_upperBar_wrap { width: 100%; height: 10%; }
+
+.content_calendar_upperBar_dateTitle_wrap { width: 100%; height: 100%; float: left; margin-top: 3%; }
+.content_calendar_upperBar_dateTitle_wrap h2 { color: #ffffff; font-size: 40pt; }
+
+.content_calendar_week_wrap { width: 100%; height: 7%;}
+.content_calendar_week_wrap ul li { width: 14.285%; height: 100%; float: left; }
+.content_calendar_week_wrap h3 { }
+
+.content_calendar_tabular_wrap { width: 100%; height: 80%; }
+.content_calendar_tabular_cell_wrap { width: 14.07%; height: 16.66%; float: left; background-color: #f4e6b8; border: solid 1px #ffffff; }
+
+.content_calendar_tabular_cell_day_wrap { width: 100%; height: 20%; }
+.content_calendar_tabular_cell_day_wrap h5 { margin: 0px; padding: 0px; float: left; }
+
+.content_calendar_tabular_cell_content_wrap { width: 100%; height: 80%; }
+.content_calendar_tabular_cell_content_wrap p { width: 100%; margin: 0px; padding: 0px; font-size: 15pt; }
+
+#year { width: 25%; height: 55px; border: solid 0px #aaaaaa; float: left; margin-left: 30%; }
+#month { width: 12%; height: 55px; border: solid 0px #aaaaaa; float: left;  }

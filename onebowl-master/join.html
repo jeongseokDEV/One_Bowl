@@ -1,0 +1,345 @@
+<html>
+<head>
+  <meta charset="utf-8">
+  <title></title>
+
+  <link rel="stylesheet" href="./css/base.css?ver=2">
+  <link rel="stylesheet" href="./css/join.css?ver=3">
+  <style>
+  </style>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+  <script>
+  var CHECK_PASSWORD_FLAG = false;
+  var CHECK_ID_FLAG = false;
+  var CHECK_SERVICE_TERMS_FLAG = false;
+  var CHECK_INDIVIDUAL_TERMS_FLAG = false;
+
+  var sex = "";
+
+  function matchPassword() {
+    var password = document.getElementById("pw_input");
+    var password_confirm = document.getElementById("pwRight_input");
+    var matchPasswordText = document.getElementById("matchPasswordText");
+
+    if(password.value != password_confirm.value){
+      matchPasswordText.innerHTML = "<p>비밀번호가 다릅니다.</p>";
+      CHECK_PASSWORD_FLAG = false;
+    } else if(password.value== ""|| password_confirm.value == ""){
+      matchPasswordText.innerHTML ="<p></p>";
+      CHECK_PASSWORD_FLAG = false;
+    }
+      else{
+        matchPasswordText.innerHTML ="<p>비밀번호가 같습니다.</p>";
+        CHECK_PASSWORD_FLAG = true;
+    }
+
+    setTimeout("matchPassword()", 500);
+  }
+
+  function selectSex(howSex) {
+
+    if(howSex == "남") {
+      sex = "남";
+      $('.content_joinForm_sex_men_wrap').css('background-color', '#FCD951');
+      $('.content_joinForm_sex_women_wrap').css('background-color', '#FFFFFF');
+
+    } else {
+      sex = "여";
+      $('.content_joinForm_sex_women_wrap').css('background-color', '#FCD951');
+      $('.content_joinForm_sex_men_wrap').css('background-color', '#FFFFFF');
+    }
+  }
+
+  // 아이디 중복확인하는 함수
+  $(document).ready(function() {
+      $("#idCheck").click(function() {
+        var id=$("#id_input").val();
+        var dataString = "id=" + id;
+
+        if(id == "") {
+          alert("아이디를 입력해 주세요.");
+          return;
+        }
+
+        $.ajax({
+          type: "POST",
+          url:"http://61.245.230.97/SE/Server/idCheck.php",
+          data: dataString,
+          crossDomain: true,
+          cache: false,
+
+          beforeSend: function(){ },
+          success: function(data){
+            if(data=="success") {
+              document.getElementById("idCheckDisplay").innerHTML = "<font><br></br><br></br>이미 사용중인 아이디 입니다.</font>";
+            } else if(data=="error") {
+              document.getElementById("idCheckDisplay").innerHTML = "<font><br></br><br></br>사용 가능한 아이디 입니다.</font>";
+              CHECK_ID_FLAG = true;
+            }
+          }
+        });
+
+        return false;
+      });
+    });
+
+    // 가입하기 버튼 클릭시 가입정보 서버로 전송하는 함수
+    $(document).ready(function() {
+        $("#join_submit").click(function() {
+          var id = $("#id_input").val();
+          var pw = $("#pw_input").val();
+          var pwCf = $("#pwRight_input").val();
+          var age = $("age").val();
+
+          var dataString = "id=" + id + "&pw=" + pw + "&sex=" + sex + "&age=" + age;
+
+          if(id == "") {
+            alert("아이디를 입력하세요.");
+            id.focus();
+            return;
+          } else if(pw == "") {
+            alert("비밀번호를 입력하세요.");
+            pw.focus();
+            return;
+          } else if(pwCf == "") {
+            alert("비밀번호 확인을 입력하세요.");
+            pwRight.focus();
+            return;
+          } else if(sex == "") {
+            alert("성별을 선택하세요.");
+            sex.focus();
+            return;
+          } else if(age == "") {
+            alert("나이를 입력하세요.");
+            age.focus();
+            return;
+          }
+
+          if(CHECK_PASSWORD_FLAG == false) {
+            alert("비밀번호가 일치하지 않습니다.");
+            return;
+          } else if(CHECK_ID_FLAG == false) {
+            alert("아이디 중복을 확인해 주세요.");
+            return;
+          }
+
+          if(CHECK_SERVICE_TERMS_FLAG == false) {
+            alert("서비스 이용약관에 동의해 주세요.");
+            return;
+          } else if(CHECK_INDIVIDUAL_TERMS_FLAG == false) {
+            alert("개인정보 이용약관에 동의해 주세요.");
+            return;
+          }
+
+          $.ajax({
+            type: "POST",
+            url:"http://61.245.230.97/SE/Server/join.php",
+            data: dataString,
+            crossDomain: true,
+            cache: false,
+
+            beforeSend: function(){ },
+            success: function(data){
+              if(data=="success") {
+                alert("가입이 완료되었습니다.");
+                location.replace("./index.html")
+              } else if(data=="error") {
+              }
+            }
+          });
+
+          return false;
+        });
+      });
+
+      $(document).ready(function() {
+        var checkStateAll = false;
+        var checkStateService = false;
+        var checkStateIndivdual = false;
+        var checkStatePush = false;
+
+        <!-- 모든 이용약관 동의 체크박스 -->
+        $('.content_terms_all_img_wrap').click(function(){
+          if(checkStateAll == false){
+            $('.content_terms_all_img_wrap').attr('src', './image/체크.png');
+            checkStateAll = true;
+            $('.content_terms_service_img_wrap').attr('src', './image/체크.png');
+            checkStateService = true;
+            $('.content_terms_individual_img_wrap').attr('src', './image/체크.png');
+            checkStateIndivdual = true;
+            $('.content_terms_push_img_wrap').attr('src', './image/체크.png');
+            checkStatePush = true;
+
+            CHECK_SERVICE_TERMS_FLAG = true;
+            CHECK_INDIVIDUAL_TERMS_FLAG = true;
+        } else {
+            $('.content_terms_all_img_wrap').attr('src', './image/체크2.png');
+            checkStateAll = false;
+            $('.content_terms_service_img_wrap').attr('src', './image/체크2.png');
+            checkStateService = false;
+            $('.content_terms_individual_img_wrap').attr('src', './image/체크2.png');
+            checkStateIndivdual = false;
+            $('.content_terms_push_img_wrap').attr('src', './image/체크2.png');
+            checkStatePush = false;
+
+            CHECK_SERVICE_TERMS_FLAG = false;
+            CHECK_INDIVIDUAL_TERMS_FLAG = false;
+          }
+      });
+
+
+
+         <!-- 서비스 이용약관 동의 체크박스-->
+        $('.content_terms_service_img_wrap').click(function() {
+          if(checkStateService == false) {
+              $('.content_terms_service_img_wrap').attr('src', './image/체크.png');
+              checkStateService = true;
+
+              CHECK_SERVICE_TERMS_FLAG = true;
+          } else {
+              $('.content_terms_service_img_wrap').attr('src', './image/체크2.png');
+              checkStateService = false;
+
+              CHECK_SERVICE_TERMS_FLAG = false;
+            }
+        });
+
+         <!-- 개인정보 이용약관 동의 체크박스-->
+        $('.content_terms_individual_img_wrap').click(function() {
+          if(checkStateIndivdual == false) {
+              $('.content_terms_individual_img_wrap').attr('src', './image/체크.png');
+              checkStateIndivdual = true;
+
+              CHECK_INDIVIDUAL_TERMS_FLAG = true;
+          } else {
+              $('.content_terms_individual_img_wrap').attr('src', './image/체크2.png');
+              checkStateIndivdual = false;
+
+              CHECK_INDIVIDUAL_TERMS_FLAG = false;
+            }
+        });
+
+         <!-- 푸시 알림 선택 동의 체크박스-->
+         $('.content_terms_push_img_wrap').click(function(){
+           if(checkStatePush == false) {
+             $('.content_terms_push_img_wrap').attr('src', './image/체크.png');
+             checkStatePush = true;
+           } else{
+             $('.content_terms_push_img_wrap').attr('src', './image/체크2.png');
+             checkStatePush = false;
+           }
+       });
+    });
+  </script>
+</head>
+<body>
+  <body onload="javascript:matchPassword();">
+  <center>
+  <div class="total_wrap">
+    <div class="header_wrap">
+      <div class="header_bar_wrap">
+      </div>
+
+      <!-- 뒤로가기 버튼 -->
+      <div class="header_prevBtn_wrap">
+        <a href="./index.html"><img src="./image/뒤로가기.png" alt="뒤로가기" /></a>
+      </div>
+
+      <!-- 회원가입 -->
+      <div class="header_title_wrap">
+        <font> Join </font>
+      </div>
+    </div>
+
+
+    <div class="content_wrap">
+      <form id="joinForm" name="joinForm" method="post" action="http://61.245.230.97/SE/Server/join.php">
+      <div class="content_joinForm_wrap">
+        <!-- 아이디 입력 -->
+        <div class="content_joinForm_id_wrap">
+          <input id ="id_input" type="text" name="id_input" placeholder="아이디 입력" />
+        </div>
+
+        <!-- 중복확인 -->
+        <div class="content_joinForm_idCheck_wrap">
+          <img id="idCheck" src="./image/중복확인.png" alt="중복확인" />
+        </div>
+
+        <!-- 중복확인 결과를 보여주는 공간 -->
+        <div id="idCheckDisplay" class="content_joinForm_idCheckDisplay_wrap">
+        </div>
+
+        <!-- 비밀번호 입력 -->
+        <div class="content_joinForm_pw_wrap">
+          <input id = "pw_input" type="password" name="pw_input" placeholder="비밀번호 입력" />
+        </div>
+
+        <!-- 비밀번호 확인 -->
+        <div class="content_joinForm_pwCf_wrap">
+          <input id="pwRight_input" type="password" name="pwRight_input" placeholder="비밀번호 확인" />
+        </div>
+        <!-- 비밀번호 입력 확인 값 비교 -->
+       <div id="matchPasswordText">
+         <p></p>
+       </div>
+
+        <!-- 성별 선택 -->
+        <div class="content_joinForm_sex_wrap">
+          <a href="javascript:selectSex(men.value);">
+            <div class="content_joinForm_sex_men_wrap">
+              <input id="men" type="hidden" value="남">
+              <h3>남</h3>
+            </div>
+          </a>
+          <a href="javascript:selectSex(women.value);">
+            <div class="content_joinForm_sex_women_wrap">
+              <input id="women" type="hidden" value="여">
+              <h3>여</h3>
+            </div>
+          </a>
+        </div>
+
+        <!-- 나이 입력 -->
+        <div class="content_joinForm_age_wrap">
+          <input id="age" type="text" name="age" placeholder="나이 입력" />
+        </div>
+
+
+        <!--이용약관 동의 -->
+          <div class="content_terms_wrap">
+            <div class="content_terms_all_wrap">
+              <img class="content_terms_all_img_wrap" src="./image/체크2.png" alt="체크">
+              <font>모든 약관에 동의합니다</font>
+            </div>
+            <div class="content_terms_service_wrap">
+              <img class="content_terms_service_img_wrap" src="./image/체크2.png" alt="체크">
+              <font>서비스 이용약관 동의(필수)</font>
+            </div>
+            <div class="content_terms_individual_wrap">
+              <img class="content_terms_individual_img_wrap" src="./image/체크2.png" alt="체크">
+              <font>개인 정보 이용 동의(필수)</font>
+            </div>
+            <div class="content_terms_push_wrap">
+              <img class="content_terms_push_img_wrap" src="./image/체크2.png" alt="체크">
+              <font>푸시 알림 사용(선택)</font>
+            </div>
+          </div>
+
+
+        <!-- 가입하기 버튼 -->
+        <div class="content_joinForm_submit_wrap">
+          <img id="join_submit" src="./image/회원가입.png" alt="가입하기" />
+        </div>
+      </div>
+    </form>
+    </div>
+
+    <div class="tailer_wrap">
+    </div>
+  </div>
+  </center>
+</body>
+</html>

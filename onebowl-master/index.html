@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title></title>
+
+  <link rel="stylesheet" href="./css/base.css?ver=2">
+  <link rel="stylesheet" href="./css/index.css">
+  <style>
+  </style>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+  <script>
+  document.addEventListener("deviceready", onDeviceReady, false);
+  function onDeviceReady() {
+      cordova.exec(null, null, "SplashScreen", "hide", []);
+  }
+  </script>
+
+  <script>
+
+
+ // 로그인시 등록된 아이디인지 그리고 그 비밀번호가 일치하는지 확인하는 함수
+ $(document).ready(function() {
+     $("#loginCheck").click(function() {
+       var id= $("#id_input").val();
+       var pw= $("#pw_input").val();
+       var dataString = "id=" + id + "&pw=" + pw;
+
+       if(id ==""){
+         alert("아이디를 입력하시오. ");
+         return;
+       } else if(pw =="") {
+         alert("비밀번호를 입력하시오. ");
+         return;
+       }
+
+       $.ajax({
+         type: "POST",
+         url:"http://61.245.230.97/SE/Server/login.php",
+         data: dataString,
+         crossDomain: true,
+         cache: false,
+
+         beforeSend: function(){ },
+         success: function(data){
+           if(data=="success") {
+             location.replace("./main.html")
+           } else if(data=="error") {
+             alert("입력하신 아이디, 비밀번호가 올바르지 않습니다.");
+           }
+         }
+       });
+
+       return false;
+     });
+   });
+  </script>
+</head>
+<body>
+  <center>
+  <div class="total_wrap">
+    <div class="header_wrap">
+      <div class="header_bar_wrap">
+      </div>
+      <div class="header_title_wrap">
+        <h2>Login</h2>
+      </div>
+    </div>
+
+    <div class="content_wrap">
+      <div class="content_logo_wrap">
+        <img src="./image/원그릇.png" alt="로고 이미지" />
+      </div>
+      <div class="content_loginForm_wrap">
+        <!-- 아이디, 비밀번호 입력 부분 -->
+        <div class="content_loginForm_input_wrap">
+          <!-- 아이디 입력 부분 옆 아이콘 -->
+          <div class="content_loginForm_input_idIcon_wrap">
+            <img src="./image/아이디.png" alt="로그인 옆에 이미지" />
+          </div>
+          <!-- 아이디 입력 란 -->
+          <div class="content_loginForm_input_id_wrap">
+            <input id="id_input" type="text" name="id_input" placeholder=" 아이디 입력">
+          </div>
+
+          <!-- 비밀번호 입력 부분 옆 아이콘 -->
+          <div class="content_loginForm_input_pwIcon_wrap">
+            <img src="./image/비번.png" alt="비밀번호 옆에 이미지" />
+          </div>
+
+          <!-- 비밀번호 입력 란 -->
+          <div class="content_loginForm_input_pw_wrap">
+            <input id="pw_input" type="password" name="pw_input" placeholder=" 비밀번호 입력">
+          </div>
+        </div>
+        <!-- 로그인 버튼, 회원가입 버튼-->
+        <div class="content_loginForm_button_wrap">
+          <div class="content_loginForm_button_login_wrap">
+            <!-- <a href="javascript:login();"><img src="" alt="로그인" /></a> -->
+            <img id="loginCheck" src="./image/로그인.png" alt="로그인">
+          </div>
+
+          <div class="content_loginForm_button_join_wrap">
+            <a href="./join.html"><img src="./image/회원가입.png" alt="가입하기" /></a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tailer_wrap">
+    </div>
+  </div>
+  </center>
+</body>
+</html>
