@@ -18,9 +18,7 @@
 개발시 중점적으로 두었던 사항은 개발과정을 담은 문서 제작과 그리고 각자 맡은 task에 중점을 두었습니다. 
   
 </br>
-
- - Front-end 개발 / HTML / CSS / JAVASCRIPT 
- - Hybrid Mobile Application
+ - Front-end 개발 / HTML / CSS / JAVASCRIPT
  - Waterfall과 Aglile을 복합적으로 적용하여 개발
  - 유지보수를 위한 추적가능한 문서를 작성
 
