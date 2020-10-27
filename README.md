@@ -19,7 +19,9 @@
   
 </br>
  - Front-end 개발 / HTML / CSS / JAVASCRIPT
+ </br>
  - Waterfall과 Aglile을 복합적으로 적용하여 개발
+ </br>
  - 유지보수를 위한 추적가능한 문서를 작성
 
 
