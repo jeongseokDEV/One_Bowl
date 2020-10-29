@@ -24,9 +24,9 @@
 
 ## 원그릇을 개발하면서 사용한 프로그래밍 언어
 
- - Front-end : `HTML/CSS` `JavaScript` `jQuery` `VSCode`  
- - Back-end:  `Linux` `Apache` `MySQL` `PHP`  
- - `Phonegap` `Cordova`  
+ - Front-end : HTML/CSS | JavaScript | jQuery | VSCode  
+ - Back-end : Linux | Apache | MySQL | PHP 
+ - Phonegap | Cordova  
  
 </br>
 </br>
